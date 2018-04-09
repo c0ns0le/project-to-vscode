@@ -10,7 +10,6 @@ class ExtendedEnvBuilder(EnvBuilder):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.path_project = args[0]
 
     def post_setup(self, context):
         activate = '{}/bin/activate'.format(context.env_dir)
@@ -18,9 +17,9 @@ class ExtendedEnvBuilder(EnvBuilder):
         system('source {} && pip install pylint'.format(activate))
         system('source {} && pip install pep8'.format(activate))
 
-        if path.isfile('{}/development.txt'.format(self.path_project)):
-            system('source {} && pip install -r {}/development.txt'.format(
-                activate, self.path_project))
+        if path.isfile('{}/../development.txt'.format(context.env_dir)):
+            system('source {} && pip install -r {}/../development.txt'.format(
+                activate, context.env_dir))
 
 
 class Create(object):
@@ -43,10 +42,10 @@ class Create(object):
 
     def git_clone(self):
         if self.git:
-            Repo.clone_from(self.arg, '{}'.format(self.path_workspace))
+            Repo.clone_from(self.arg, '{}'.format(self.path_project))
 
     def venv(self):
-        ExtendedEnvBuilder(self.path_project, with_pip=True).create(
+        ExtendedEnvBuilder(with_pip=True).create(
             '{}/.venv'.format(self.path_project))
 
     def shortcut(self):
