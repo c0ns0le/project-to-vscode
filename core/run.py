@@ -17,7 +17,7 @@ class ExtendedEnvBuilder(EnvBuilder):
         system('source {} && pip install pylint'.format(activate))
         system('source {} && pip install pep8'.format(activate))
 
-        if path.isfile('{}/../development.txt'.format(context.env_dir)):
+        if path.isfile('{}/../requirements.txt'.format(context.env_dir)):
             system('source {} && pip install -r {}/../requirements.txt'.format(
                 activate, context.env_dir))
 
