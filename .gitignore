@@ -102,3 +102,5 @@ ENV/
 
 # VS Code project settings
 .vscode/
+code.desktop
+.bash_history

@@ -18,8 +18,13 @@ class ExtendedEnvBuilder(EnvBuilder):
         system('source {} && pip install pep8'.format(activate))
 
         if path.isfile('{}/../development.txt'.format(context.env_dir)):
-            system('source {} && pip install -r {}/../development.txt'.format(
+            system('source {} && pip install -r {}/../requirements.txt'.format(
                 activate, context.env_dir))
+
+        with open('{}/bin/activate'.format(context.env_dir), 'a') as file_act:
+            file_act.write(
+                '\nexport HISTFILE=$VIRTUAL_ENV/../.bash_history\n\n'
+                )
 
 
 class Create(object):
@@ -61,9 +66,16 @@ class Create(object):
             vscode.write('Icon = code\n')
         chmod('{}/code.desktop'.format(self.path_project), 0o775)
 
+
 if __name__ == '__main__':
     start = Create(argv[1])
     start.folder()
-    start.git_clone()
-    start.venv()
+    try:
+        start.git_clone()
+    except:
+        pass
+    try:
+        start.venv()
+    except:
+        pass
     start.shortcut()
