@@ -17,14 +17,18 @@ class ExtendedEnvBuilder(EnvBuilder):
         system('source {} && pip install pylint'.format(activate))
         system('source {} && pip install pep8'.format(activate))
 
+        if system('git show-branch develop'):
+            system('cd {}/../ && git checkout develop'.format(context.env_dir))
+
         if path.isfile('{}/../requirements.txt'.format(context.env_dir)):
             system('source {} && pip install -r {}/../requirements.txt'.format(
                 activate, context.env_dir))
 
         with open('{}/bin/activate'.format(context.env_dir), 'a') as file_act:
-            file_act.write(
-                '\nexport HISTFILE=$VIRTUAL_ENV/../.bash_history\n\n'
-                )
+            file_act.write('\n')
+            file_act.write('HISTFILE="$VIRTUAL_ENV/../.bash_history"\n')
+            file_act.write('export HISTFILE\n')
+            file_act.write('\n')
 
 
 class Create(object):
