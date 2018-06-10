@@ -13,15 +13,15 @@ class ExtendedEnvBuilder(EnvBuilder):
 
     def post_setup(self, context):
         activate = '{}/bin/activate'.format(context.env_dir)
-        system('source {} && pip install -U pip'.format(activate))
-        system('source {} && pip install pylint'.format(activate))
-        system('source {} && pip install pep8'.format(activate))
+        system('source {} && pip install -U pip 2>&1 > /dev/null'.format(activate))
+        system('source {} && pip install pylint 2>&1 > /dev/null'.format(activate))
+        system('source {} && pip install pep8 2>&1 > /dev/null'.format(activate))
 
-        if system('git show-branch develop'):
+        if path.isdir('{}/../.git'.format(context.env_dir)) and system('git show-branch develop'):
             system('cd {}/../ && git checkout develop'.format(context.env_dir))
 
         if path.isfile('{}/../requirements.txt'.format(context.env_dir)):
-            system('source {} && pip install -r {}/../requirements.txt'.format(
+            system('source {} && pip install -r {}/../requirements.txt 2>&1 > /dev/null'.format(
                 activate, context.env_dir))
 
         with open('{}/bin/activate'.format(context.env_dir), 'a') as file_act:
