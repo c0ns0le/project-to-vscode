@@ -16,6 +16,8 @@ class ExtendedEnvBuilder(EnvBuilder):
         system('source {} && pip install -U pip 2>&1 > /dev/null'.format(activate))
         system('source {} && pip install pylint 2>&1 > /dev/null'.format(activate))
         system('source {} && pip install pep8 2>&1 > /dev/null'.format(activate))
+        system('source {} && pip install autopep8 2>&1 > /dev/null'.format(activate))
+        system('source {} && pip install flake8 2>&1 > /dev/null'.format(activate))
 
         if path.isdir('{}/../.git'.format(context.env_dir)) and system('git show-branch develop'):
             system('cd {}/../ && git checkout develop'.format(context.env_dir))
