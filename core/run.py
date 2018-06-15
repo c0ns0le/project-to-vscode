@@ -1,30 +1,33 @@
-from sys import argv
-from os import getenv, path, makedirs, chmod, system
+from os import chmod, getenv, makedirs, path, system
 from re import match
-from git import Repo
-
+from sys import argv
 from venv import EnvBuilder
+
+from git import Repo
 
 
 class ExtendedEnvBuilder(EnvBuilder):
 
     def __init__(self, *args, **kwargs):
+
         super().__init__(*args, **kwargs)
 
     def post_setup(self, context):
-        activate = '{}/bin/activate'.format(context.env_dir)
-        system('source {} && pip install -U pip 2>&1 > /dev/null'.format(activate))
-        system('source {} && pip install pylint 2>&1 > /dev/null'.format(activate))
-        system('source {} && pip install pep8 2>&1 > /dev/null'.format(activate))
-        system('source {} && pip install autopep8 2>&1 > /dev/null'.format(activate))
-        system('source {} && pip install flake8 2>&1 > /dev/null'.format(activate))
 
-        if path.isdir('{}/../.git'.format(context.env_dir)) and system('git show-branch develop'):
+        self.activate = '{}/bin/activate'.format(context.env_dir)
+        self.packages = ['pylint', 'pep8', 'flake8', 'autopep8']
+
+        system('source {} && pip install -U pip'.format(self.activate))
+        system('source {} && pip install {}'.format(self.activate, ' '.join(
+            x for x in self.packages)))
+
+        if path.isdir('{}/../.git'.format(context.env_dir)) and system(
+                'git show-branch develop'):
             system('cd {}/../ && git checkout develop'.format(context.env_dir))
 
         if path.isfile('{}/../requirements.txt'.format(context.env_dir)):
-            system('source {} && pip install -r {}/../requirements.txt 2>&1 > /dev/null'.format(
-                activate, context.env_dir))
+            system('source {} && pip install -r {}/../requirements.txt'.format(
+                self.activate, context.env_dir))
 
         with open('{}/bin/activate'.format(context.env_dir), 'a') as file_act:
             file_act.write('\n')
@@ -36,6 +39,7 @@ class ExtendedEnvBuilder(EnvBuilder):
 class Create(object):
 
     def __init__(self, arg):
+
         self.path_workspace = '{}/{}'.format(getenv('HOME'), 'Projects')
         self.arg = arg
 
@@ -49,39 +53,46 @@ class Create(object):
         self.path_project = '{}/{}'.format(self.path_workspace, self.name)
 
     def folder(self):
+
         makedirs('{}'.format(self.path_project), exist_ok=True)
 
     def git_clone(self):
+
         if self.git:
             Repo.clone_from(self.arg, '{}'.format(self.path_project))
 
     def venv(self):
-        ExtendedEnvBuilder(with_pip=True).create(
-            '{}/.venv'.format(self.path_project))
+
+        ExtendedEnvBuilder(with_pip=True).create('{}/.venv'.format(
+            self.path_project))
 
     def shortcut(self):
-        with open('{}/code.desktop'.format(
-                self.path_project), 'w') as vscode:
+
+        with open('{}/code.desktop'.format(self.path_project), 'w') as vscode:
             vscode.write('[Desktop Entry]\n')
             vscode.write('Type = Application\n')
             vscode.write('Name = Visual Studio Code\n')
             vscode.write('Exec = bash -c ')
-            vscode.write(
-                '"source {}/.venv/bin/activate && code {}"\n'.format(
-                    self.path_project, self.path_project))
+            vscode.write('"source {}/.venv/bin/activate && code {}"\n'.format(
+                self.path_project, self.path_project))
             vscode.write('Icon = code\n')
+
         chmod('{}/code.desktop'.format(self.path_project), 0o775)
 
 
 if __name__ == '__main__':
+
     start = Create(argv[1])
     start.folder()
+
     try:
         start.git_clone()
     except:
         pass
+
     try:
         start.venv()
     except:
         pass
+
     start.shortcut()

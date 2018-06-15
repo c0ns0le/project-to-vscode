@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type = Application
+Name = Install
+Exec = bash -c 'chmod u+x $(dirname $*)/install/install.sh && $(dirname $*)/install/install.sh $(dirname $*)' dummy %k
+Icon = code
+Terminal = true

@@ -1,0 +1,12 @@
+{
+    "workbench.startupEditor": "none",
+    "workbench.list.openMode": "doubleClick",
+    "editor.renderWhitespace": "boundary",
+    "editor.rulers": [80],
+    "window.restoreWindows": "none",
+    "explorer.confirmDelete": false,
+    "update.channel": "none",
+    "update.enableWindowsBackgroundUpdates": false,
+    "python.linting.pep8Enabled": true,
+    "python.linting.flake8Enabled": true,
+}
