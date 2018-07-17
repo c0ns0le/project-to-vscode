@@ -1,5 +1,5 @@
-autopep8==1.3.5
-flake8==3.5.0
-GitPython==2.1.9
-pep8==1.7.1
-pylint==1.9.2
+autopep8
+GitPython
+pep8
+pylint
+pylint-django

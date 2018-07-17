@@ -8,5 +8,7 @@
     "update.channel": "none",
     "update.enableWindowsBackgroundUpdates": false,
     "python.linting.pep8Enabled": true,
-    "python.linting.flake8Enabled": true,
+    "python.linting.pylintArgs": [
+        "--load-plugins", "pylint_django"
+    ],
 }
